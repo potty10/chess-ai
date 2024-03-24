@@ -92,6 +92,9 @@ e1g1 (white short castling)
 e7e8q (for promotion)
 ```
 
+## Rules
+- Fivefold repitition: If both players achieve the same position 5 times (Not necessarily in a row), it is automatically a draw. 
+
 [^fn1]: https://www.chess.com/terms/chess-notation
 [^fn2]: https://en.wikipedia.org/wiki/Algebraic_notation_(chess)
 [^fn3]: https://www.chess.com/terms/chess-pgn

@@ -4,6 +4,7 @@
     - [Heuristics](#heuristics)
     - [Move Ordering](#move-ordering)
     - [Transposition Tables](#transposition-tables)
+3. [Evaluation](#evaluation)
 4. [Development](#references)
 
 ## Introduction
@@ -21,8 +22,22 @@ The third enhancement we implemented are transposition tables. In chess there ar
 The opponent can use the fivefold repitition rule or the 75 move rule to force a draw.
 #### Zobrist hashing
 
+## Evaluation
+We first have a set of chess bots and play them against each other. We calculate the ELO from the results of these matches using the Beyesian Elo
+Rating algorithm: https://www.remi-coulom.fr/Bayesian-Elo. 
+
+Links to ELO system:
+- https://www.cantorsparadise.com/the-mathematics-of-elo-ratings-b6bfc9ca1dba
+- https://www.reddit.com/r/chess/comments/q4x477/retroactive_elo_calculator_using_a_data_set_of/
+- https://github.com/michiguel/Ordo?tab=readme-ov-file
+
+Links to engines:
+- https://www.chess.com/forum/view/general/chess-program-with-variable-difficulty
 ## Development
 Use this link: [https://www.chess.com/analysis?tab=analysis](https://www.chess.com/analysis?tab=analysis) to visualise the game. Just input the FEN to get the current state of the board, or input the entire match in algebraic notation to get the whole match.
+
+Use this link: [https://github.com/lichess-bot-devs/lichess-bot?tab=readme-ov-file](https://github.com/lichess-bot-devs/lichess-bot?tab=readme-ov-file) to play the bot against real human players on lichess.
+Takes a long time to find a match.
 ## References
 https://florian-dahlitz.de/articles/building-a-chess-computer-using-python
 https://stackoverflow.com/questions/59647151/minimax-with-alhpa-beta-pruning-for-chess

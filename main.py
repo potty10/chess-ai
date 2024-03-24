@@ -2,6 +2,7 @@ import chess
 import random
 from heuristics import *
 from minimax import *
+from engines.stockfish_bot import StockfishBot
 
 def random_choice(board):
     move = random.choice(list(board.legal_moves))
@@ -19,35 +20,44 @@ def get_statistics(no_games):
         "draws-insufficient_material": 0
     }
 
+    termination_enums = {
+        chess.Termination.CHECKMATE: "CHECKMATE",
+        chess.Termination.STALEMATE: "STALEMATE",
+        chess.Termination.INSUFFICIENT_MATERIAL: "INSUFFICIENT_MATERIAL",
+        chess.Termination.SEVENTYFIVE_MOVES: "SEVENTYFIVE_MOVES",
+        chess.Termination.FIVEFOLD_REPETITION: "FIVEFOLD_REPETITION",
+        chess.Termination.FIFTY_MOVES: "FIFTY_MOVES",
+        chess.Termination.THREEFOLD_REPETITION: "THREEFOLD_REPETITION"
+    }
+    win_count = [0,0] #white, black
+
+    results = {i: 0 for i in range(1, 8)}
+
+    stockfish_bot = StockfishBot()
     for test_case in range(no_games):
         board = chess.Board()
+        stockfish_bot.reset()
         n = 0
         moves = []
         while True:
-            if n%2 == 0:
-                move = random_choice(board)
+            if n%2 == 0: #White player
+                # move = random_choice(board)
+                #move = stockfish_bot.make_move(board)
+                move = minimax2(board, piece_square_table_eval)
                 moves.append(move)
                 board.push(move)
             else:
-                move = minimax2(board)
+                move = minimax2(board, piece_count)
                 moves.append(move)
                 board.push(move)
 
             n += 1
             outcome = board.outcome()
             if outcome:
-                if board.is_stalemate():
-                    results["draws-stalemate"] += 1
-                
-                # Neither side has sufficient winning material
-                if board.is_insufficient_material():
-                    results["draws-insufficient_material"] += 1
-
-                if board.is_checkmate():
-                    if outcome.winner == chess.WHITE:
-                        results["random_wins"] += 1
-                    else:
-                        results["minimax_wins"] += 1
+                results[outcome.termination.value] += 1
+                if outcome.termination == chess.Termination.CHECKMATE:
+                    winner_idx = 0 if outcome.winner else 1
+                    win_count[winner_idx] += 1
 
                 # Record the history of moves
                 with open("history.txt", "a") as f:
@@ -59,7 +69,11 @@ def get_statistics(no_games):
 
                 break
 
-    return results
+    result = {termination_enums[chess.Termination(i)]: results[i] for i in range(1, 8)}
+    result["White Win"] = win_count[0]
+    result["Black Win"] = win_count[1]
+
+    return result
             
 if __name__ == "__main__":
     results = get_statistics(10)
