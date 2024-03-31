@@ -3,6 +3,7 @@ import random
 from heuristics import *
 from minimax import *
 from engines.stockfish_bot import StockfishBot
+import time
 
 def random_choice(board):
     move = random.choice(list(board.legal_moves))
@@ -33,21 +34,31 @@ def get_statistics(no_games):
 
     results = {i: 0 for i in range(1, 8)}
 
-    stockfish_bot = StockfishBot()
+    # stockfish_bot = StockfishBot()
     for test_case in range(no_games):
         board = chess.Board()
-        stockfish_bot.reset()
+        ttagent = MiniMaxAgent()
+        # stockfish_bot.reset()
         n = 0
         moves = []
+        decision_time = [0, 0]
         while True:
             if n%2 == 0: #White player
+                start = time.time()
+                move = ttagent.negamax(board, larry_kaufman_piece_sum, chess.WHITE, depth=3)  
+                end = time.time()
+                decision_time[0] += end - start
                 # move = random_choice(board)
                 #move = stockfish_bot.make_move(board)
-                move = minimax2(board, piece_square_table_eval)
+                # move = minimax_alpha_beta_general(board, piece_count, chess.BLACK, depth=3)
                 moves.append(move)
                 board.push(move)
             else:
-                move = minimax2(board, piece_count)
+                # move = random_choice(board)
+                start = time.time()
+                move = negamax(board, larry_kaufman_piece_sum, chess.BLACK, depth=3)  
+                end = time.time()  
+                decision_time[0] += end - start 
                 moves.append(move)
                 board.push(move)
 
@@ -72,9 +83,11 @@ def get_statistics(no_games):
     result = {termination_enums[chess.Termination(i)]: results[i] for i in range(1, 8)}
     result["White Win"] = win_count[0]
     result["Black Win"] = win_count[1]
+    result["White Time"] = decision_time[0]
+    result["Black Time"] = decision_time[1]
 
     return result
             
 if __name__ == "__main__":
-    results = get_statistics(10)
+    results = get_statistics(1)
     print(results)

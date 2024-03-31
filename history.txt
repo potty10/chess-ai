@@ -1,0 +1,9 @@
+[Game 0]
+[Outcome(termination=<Termination.FIVEFOLD_REPETITION: 5>, winner=None)]
+1. Nh3 Nh6 2. Ng5 Ng4 3. Nc3 Nc6 4. Nd5 e6 5. Ne3 Qxg5 6. h4 Nxe3 7. hxg5 Nxd1 8. Kxd1 Be7 9. Rh5 Kf8 10. Ke1 Kg8 11. Kd1 Kf8 12. Ke1 Kg8 13. Kd1 Kf8 14. Ke1 Kg8 15. Kd1 Kf8 16. Ke1 Kg8 17. Kd1 Kf8
+[Game 0]
+[Outcome(termination=<Termination.FIVEFOLD_REPETITION: 5>, winner=None)]
+1. Nh3 Nh6 2. Ng5 Rg8 3. Nxh7 Rh8 4. Nxf8 Rxf8 5. Rg1 Rh8 6. Rh1 Rg8 7. Rg1 Rh8 8. Rh1 Rg8 9. Rg1 Rh8 10. Rh1 Rg8 11. Rg1 Rh8 12. Rh1 Rg8 13. Rg1 Rh8
+[Game 0]
+[Outcome(termination=<Termination.FIVEFOLD_REPETITION: 5>, winner=None)]
+1. Nh3 Nh6 2. Ng5 Rg8 3. Nxh7 Rh8 4. Nxf8 Rxf8 5. Rg1 Rh8 6. Rh1 Rg8 7. Rg1 Rh8 8. Rh1 Rg8 9. Rg1 Rh8 10. Rh1 Rg8 11. Rg1 Rh8 12. Rh1 Rg8 13. Rg1 Rh8

@@ -1,6 +1,6 @@
 import chess
 
-def piece_count(board, is_white=True):
+def piece_count(board, is_maximising_player):
     '''
     Heuristic that is the sum of pieces.
 
@@ -34,11 +34,11 @@ def piece_count(board, is_white=True):
             else:
                 result -= getPieceValue(str(board.piece_at(i)))
     
-    if is_white:
+    if is_maximising_player:
         return result
     return -result
 
-def larry_kaufman_piece_sum(board: chess.Board, is_white=True):
+def larry_kaufman_piece_sum(board: chess.Board, maximising_player):
     '''
     Heuristic based on king safety and board position
 
@@ -77,19 +77,14 @@ def larry_kaufman_piece_sum(board: chess.Board, is_white=True):
         result += 50
     if bishop_count[1] == 2:
         result -= 50
-
-    # for move in board.legal_moves:
-    #     # Position is good if many pieces can attack the centre
-    #     if move.to_square in (chess.D4, chess.D5, chess.E4, chess.E5):
-    #         result += 200
     
-    if is_white:
+    if maximising_player == chess.WHITE:
         return result
     return -result
 
 # Piece square table
 # https://www.chessprogramming.org/Simplified_Evaluation_Function
-piece_squared_tables = {
+PIECE_SQUARE_TABLE = {
     chess.BISHOP: (
         -20,-10,-10,-10,-10,-10,-10,-20,
         -10,  5,  0,  0,  0,  0,  5,-10,
@@ -141,24 +136,27 @@ piece_squared_tables = {
         -20,-10,-10, -5, -5,-10,-10,-20,
     ),
     chess.ROOK: (
-        0,  0,  0,  5,  5,  0,  0,  0
+         0,  0,  0,  5,  5,  0,  0,  0,
         -5,  0,  0,  0,  0,  0,  0, -5,
         -5,  0,  0,  0,  0,  0,  0, -5,
         -5,  0,  0,  0,  0,  0,  0, -5,
         -5,  0,  0,  0,  0,  0,  0, -5,
         -5,  0,  0,  0,  0,  0,  0, -5,
-        5, 10, 10, 10, 10, 10, 10,  5,
-        0,  0,  0,  0,  0,  0,  0,  0,
+         5, 10, 10, 10, 10, 10, 10,  5,
+         0,  0,  0,  0,  0,  0,  0,  0,
     ),
 }
-def piece_square_table_eval(board: chess.Board, is_white=True):
+
+def piece_square_table_eval(board: chess.Board, maximising_player):
     result = 0
     for i in range(64):
         if board.piece_at(i):
             piece = board.piece_at(i).piece_type
-            if bool(board.piece_at(i).color): # white
-                result += piece_squared_tables[piece][i]
-            # else:
-            #     result -= piece_squared_tables[piece][63-i]
-    return result
+            if board.piece_at(i).color == chess.WHITE:
+                result += PIECE_SQUARE_TABLE[piece][i]
+            else:
+                result -= PIECE_SQUARE_TABLE[piece][63-i]
+    if maximising_player == chess.WHITE:
+        return result
+    return -result
 

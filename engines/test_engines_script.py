@@ -55,15 +55,32 @@ def parse_bayeselo_output(output: str):
 
 
 def evaluate_elo(filename: str):
-    p = subprocess.Popen(["bayeselo"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    p.communicate(input='elo\n')
-    p.communicate(input='mm\n')
-    stdout, stderr = p.communicate(input='ratings\n')
+    p = subprocess.Popen(["bayeselo"], bufsize=0, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    for line in iter(p.stdout.readline, b''):
+        print(line)
+    print("Process opened")
+    p.stdin.write(b'elo\n')
+    p.stdin.flush()
+    for line in iter(p.stdout.readline, b''):
+        pass
+    print("ELo command sent")
+    p.stdin.write(b'mm\n')
+    p.stdin.flush()
+    for line in iter(p.stdout.readline, b''):
+        pass
+    print("mm command sent")
+    p.stdin.write(b'ratings\n')
+    p.stdin.flush()
+    print("ratings command sent")
+    for line in iter(p.stdout.readline, b''):
+        print(line)
+    print(stdout)
     player_and_elo = parse_bayeselo_output(stdout)
+    print("Output parsed")
     with open("rankings.txt", "a+") as f:
         for player_name, elo in player_and_elo:
             f.write(f"{player_name},{elo}\n")
 
 if __name__ == "__main__":
-    generate_sample_matches(1, "history.txt")
+    # generate_sample_matches(3, "history.txt")
     evaluate_elo("rankings.txt")
