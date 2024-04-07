@@ -5,6 +5,8 @@ int larry_kaufman_piece_sum(chess::Board&, chess::Color);
 
 chess::Move negamax(chess::Board& board, int (*eval_func)(chess::Board&, chess::Color), chess::Color player_color, int depth);
 
+chess::Move negamax_tt(chess::Board& board, int (*eval_func)(chess::Board&, chess::Color), chess::Color player_color, int depth);
+
 class MiniMaxAgent {
     public:
         enum class TTFlag { EXACT = 1, UPPERBOUND = 2, LOWERBOUND = 3 };
@@ -28,6 +30,7 @@ class MiniMaxAgent {
         // Negamax function
         chess::Move negamax(chess::Board& board, int (*eval_func)(chess::Board&, chess::Color), chess::Color player_color, int depth);
 
+        chess::Move iterative_deepening(chess::Board& board, int (*eval_func)(chess::Board&, chess::Color), chess::Color player_color, int depth);
     private:
         // Private member variables
         std::unordered_map<uint64_t, TTEntry> transposition_table;

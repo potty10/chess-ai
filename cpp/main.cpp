@@ -46,6 +46,7 @@ int get_statistics(int no_games)
         result[r] = 0;
     }
 
+    float time_multiple = (1 << 10) / pow(10, 3); //
 
     std::vector<int> win_count = {0, 0}; // white, black
     for (int test_case = 0; test_case < no_games; ++test_case) {
@@ -53,21 +54,22 @@ int get_statistics(int no_games)
         int n = 1;
         std::stringstream move_history;
 
-        MiniMaxAgent negamax_agent;
+        MiniMaxAgent negamax_agent_white;
+        MiniMaxAgent negamax_agent_black;
 
         while(true) {
             Move move;
             if (n % 2 == 1) {
                 auto start = std::chrono::high_resolution_clock::now();
-                move = negamax_agent.negamax(board, larry_kaufman_piece_sum, Color::WHITE, 5);
+                move = negamax_agent_white.negamax(board, larry_kaufman_piece_sum, Color::WHITE, 5);
                 auto stop = std::chrono::high_resolution_clock::now();
-                result["White Time"] += duration_cast<std::chrono::microseconds>(stop - start).count() / pow(10, 6);
+                result["White Time"] += std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count()  >> 10;
                 // move = random_move(board);
             } else {
                 auto start = std::chrono::high_resolution_clock::now();
-                move = random_move(board);
+                move = negamax_agent_black.negamax(board, larry_kaufman_piece_sum, Color::BLACK, 5);
                 auto stop = std::chrono::high_resolution_clock::now();
-                result["Black Time"] += duration_cast<std::chrono::microseconds>(stop - start).count() / pow(10, 6);
+                result["Black Time"] += std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count()  >> 10;
             }
             move_history << n << ". " << move << " ";
             board.makeMove(move);
@@ -84,7 +86,9 @@ int get_statistics(int no_games)
                     (outcome == GameResult::LOSE && board.sideToMove() == Color::WHITE);
                 if (is_black_win) result["Black Win"] += 1;
 
-                
+                result["Black Time"] *= time_multiple;
+                result["White Time"] *= time_multiple;
+
                 std::ofstream outputFile("history.txt", std::ios_base::app);
                 if (!outputFile.is_open()) {
                     std::cerr << "Error: Unable to open the file." << std::endl;
