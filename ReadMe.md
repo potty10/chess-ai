@@ -1,5 +1,5 @@
 # Table of Contents
-1. [Introduction](#example)
+1. [Usage](#usage)
 2. [Chess Programming](#chess-programming)
     - [Heuristics](#heuristics)
     - [Move Ordering](#move-ordering)
@@ -7,8 +7,12 @@
 3. [Evaluation](#evaluation)
 4. [Development](#references)
 
-## Introduction
-This is an implementation of a chess computer with Alpha Beta pruning.
+## Usage
+This is an implementation of a chess computer with Alpha Beta pruning. There are two versions: a Python version for development and a c++ version for speed. Unfortunately, the Python bot is too slow to make any reasonably good moves.
+
+In the Python directory, first install the required packages: `pip install -r requirements.txt`. Then run `python main.py`.
+In the C++ directory, run `make` on a Linux distribution. Then run `./main` to run the driver code.
+
 ## Chess Programming
 #### Alpha Beta vs Negamax
 Negamax with alpha beta pruning seems to be the better choice since the advantage is symmetrical.
@@ -43,6 +47,9 @@ Links to engines:
 Use this link: [https://www.chess.com/analysis?tab=analysis](https://www.chess.com/analysis?tab=analysis) to visualise the game. Just input the FEN to get the current state of the board, or input the entire match in algebraic notation to get the whole match.
 
 Use this link: [https://github.com/lichess-bot-devs/lichess-bot?tab=readme-ov-file](https://github.com/lichess-bot-devs/lichess-bot?tab=readme-ov-file) to play the bot against real human players on lichess. Takes a long time to find a match.
+
+Refer to this [file](other_file.md) to understand chess notation.
+
 ## References
 https://florian-dahlitz.de/articles/building-a-chess-computer-using-python
 https://stackoverflow.com/questions/59647151/minimax-with-alhpa-beta-pruning-for-chess

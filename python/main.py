@@ -2,8 +2,9 @@ import chess
 import random
 from heuristics import *
 from minimax import *
-from engines.stockfish_bot import StockfishBot
 import time
+from stockfish_bot import StockfishBot
+import datetime
 
 def random_choice(board):
     move = random.choice(list(board.legal_moves))
@@ -45,7 +46,7 @@ def get_statistics(no_games):
         while True:
             if n%2 == 0: #White player
                 start = time.time()
-                move = ttagent.negamax(board, larry_kaufman_piece_sum, chess.WHITE, depth=3)  
+                move = ttagent.negamax(board, larry_kaufman_piece_sum, chess.WHITE, depth=2)  
                 end = time.time()
                 decision_time[0] += end - start
                 # move = random_choice(board)
@@ -56,9 +57,9 @@ def get_statistics(no_games):
             else:
                 # move = random_choice(board)
                 start = time.time()
-                move = negamax(board, larry_kaufman_piece_sum, chess.BLACK, depth=3)  
+                move = negamax(board, larry_kaufman_piece_sum, chess.BLACK, depth=2)  
                 end = time.time()  
-                decision_time[0] += end - start 
+                decision_time[1] += end - start 
                 moves.append(move)
                 board.push(move)
 
@@ -71,7 +72,8 @@ def get_statistics(no_games):
                     win_count[winner_idx] += 1
 
                 # Record the history of moves
-                with open("history.txt", "a") as f:
+                filename = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+                with open(f"output/{filename}.txt", "a") as f:
                     f.write(f'[Game {test_case}]\n')
                     f.write(f'[{str(outcome)}]\n')
                     move_history_str: str = chess.Board().variation_san(moves)

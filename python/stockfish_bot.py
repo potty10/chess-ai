@@ -10,7 +10,7 @@ class StockfishBot:
         depth - int: Ranges from 1 to 20
         '''
         self.name = name
-        self.stockfish_bot = Stockfish(path="./stockfish-windows-x86-64-avx2.exe", depth=depth)
+        self.stockfish_bot = Stockfish(path="../engines/stockfish-windows-x86-64-avx2.exe", depth=depth)
     
     def reset(self):
         self.stockfish_bot.set_fen_position(self.empty_fen)

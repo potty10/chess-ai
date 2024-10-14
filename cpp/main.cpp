@@ -3,6 +3,9 @@
 #include <fstream>
 #include <chrono>
 #include <math.h>
+#include <iomanip>
+#include <ctime>
+
 #include "chess.hpp"
 #include "utils.hpp"
 #include "negamax.hpp"
@@ -17,6 +20,15 @@ Move random_move(Board& board)
     // std::cout << uci::moveToSan(board, move) << " ";
     return move;
 }
+
+std::string get_current_timestamp() {
+    auto now = std::chrono::system_clock::now();
+    std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+    std::stringstream ss;
+    ss << std::put_time(std::localtime(&now_c), "%Y-%m-%d-%H-%M-%S");   
+    return ss.str();
+}
+
 int get_statistics(int no_games) 
 {
 
@@ -61,13 +73,13 @@ int get_statistics(int no_games)
             Move move;
             if (n % 2 == 1) {
                 auto start = std::chrono::high_resolution_clock::now();
-                move = negamax_agent_white.negamax(board, larry_kaufman_piece_sum, Color::WHITE, 5);
+                move = negamax_agent_white.negamax(board, larry_kaufman_piece_sum, Color::WHITE, 4);
                 auto stop = std::chrono::high_resolution_clock::now();
                 result["White Time"] += std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count()  >> 10;
                 // move = random_move(board);
             } else {
                 auto start = std::chrono::high_resolution_clock::now();
-                move = negamax_agent_black.negamax(board, larry_kaufman_piece_sum, Color::BLACK, 5);
+                move = negamax_agent_black.negamax(board, larry_kaufman_piece_sum, Color::BLACK, 4);
                 auto stop = std::chrono::high_resolution_clock::now();
                 result["Black Time"] += std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count()  >> 10;
             }
@@ -89,7 +101,9 @@ int get_statistics(int no_games)
                 result["Black Time"] *= time_multiple;
                 result["White Time"] *= time_multiple;
 
-                std::ofstream outputFile("history.txt", std::ios_base::app);
+                std::string filename = "output/" + get_current_timestamp() +".txt";
+
+                std::ofstream outputFile(filename, std::ios_base::app);
                 if (!outputFile.is_open()) {
                     std::cerr << "Error: Unable to open the file." << std::endl;
                     return 1;
