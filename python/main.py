@@ -3,8 +3,13 @@ import random
 from heuristics import *
 from minimax import *
 import time
-from stockfish_bot import StockfishBot
 import datetime
+import sys
+
+sys.path.insert(0, '..')
+
+from engines.stockfish_bot import StockfishBot
+
 
 def random_choice(board):
     move = random.choice(list(board.legal_moves))

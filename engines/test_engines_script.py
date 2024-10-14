@@ -2,16 +2,18 @@ from stockfish_bot import StockfishBot
 from komodo_bot import KomodoBot
 import chess
 import chess.pgn
-import subprocess
+import pexpect
+from pexpect import popen_spawn
 
-def generate_sample_matches(no_games, filename):
+def generate_stockfish_sample_matches(no_bots, no_games, filename):
     '''
     Play the game n times and record statistics
     '''
-    stockfish_bots = [StockfishBot(f"Stockfish-{i}", i) for i in range(1, 11)]
+    open(filename, 'w').close()
+    bots = [StockfishBot(f"Stockfish-{i*3}", i*3) for i in range(1, 1+no_bots)] + [StockfishBot(f"Komodo-{i*3}", i*3) for i in range(1, 1+no_bots)]
 
-    for i, bot_white in enumerate(stockfish_bots):
-        for j, bot_black in enumerate(stockfish_bots):
+    for i, bot_white in enumerate(bots):
+        for j, bot_black in enumerate(bots):
             if i == j:
                 continue
 
@@ -38,7 +40,7 @@ def generate_sample_matches(no_games, filename):
                         # Record the history of moves
                         with open(filename, "a+") as f:
                             f.write(str(game))
-                            f.write("\n")
+                            f.write("\n\n")
                         break
 
 def parse_bayeselo_output(output: str):
@@ -55,32 +57,20 @@ def parse_bayeselo_output(output: str):
 
 
 def evaluate_elo(filename: str):
-    p = subprocess.Popen(["bayeselo"], bufsize=0, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    for line in iter(p.stdout.readline, b''):
-        print(line)
-    print("Process opened")
-    p.stdin.write(b'elo\n')
-    p.stdin.flush()
-    for line in iter(p.stdout.readline, b''):
-        pass
-    print("ELo command sent")
-    p.stdin.write(b'mm\n')
-    p.stdin.flush()
-    for line in iter(p.stdout.readline, b''):
-        pass
-    print("mm command sent")
-    p.stdin.write(b'ratings\n')
-    p.stdin.flush()
-    print("ratings command sent")
-    for line in iter(p.stdout.readline, b''):
-        print(line)
-    print(stdout)
-    player_and_elo = parse_bayeselo_output(stdout)
-    print("Output parsed")
-    with open("rankings.txt", "a+") as f:
-        for player_name, elo in player_and_elo:
-            f.write(f"{player_name},{elo}\n")
+    child = popen_spawn.PopenSpawn("bayeselo.exe")
+    child.expect(">")
+    child.sendline("readpgn {}\n".format(filename))
+    child.expect(">")
+    child.sendline("elo")
+    child.expect(">")
+    child.sendline("mm")
+    child.expect(">")
+    child.sendline("ratings")
+    child.expect ('>')
+    child.sendline("ratings >rankings.txt")
+    child.expect ('>')
+
 
 if __name__ == "__main__":
-    # generate_sample_matches(3, "history.txt")
-    evaluate_elo("rankings.txt")
+    generate_stockfish_sample_matches(3,1, "history.pgn")
+    evaluate_elo("history.pgn")

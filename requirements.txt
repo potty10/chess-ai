@@ -1,0 +1,4 @@
+chess==1.11.1
+pexpect==4.9.0
+ptyprocess==0.7.0
+stockfish==3.28.0

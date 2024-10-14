@@ -1,0 +1,7 @@
+Rank Name          Elo    +    - games score oppo. draws 
+   1 Stockfish-9   266  205  205    10   90%   -53   20% 
+   2 Komodo-9      266  205  205    10   90%   -53   20% 
+   3 Komodo-6        0  181  181    10   50%     0   20% 
+   4 Stockfish-6     0  181  181    10   50%     0   20% 
+   5 Komodo-3     -266  205  205    10   10%    53   20% 
+   6 Stockfish-3  -266  205  205    10   10%    53   20% 
