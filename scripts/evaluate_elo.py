@@ -89,8 +89,6 @@ def generate_stockfish_sample_matches(bots, no_games, filename, score_filename, 
     print(bot_elos)
 
 
-
-
 if __name__ == "__main__":
 
     bots = [StockfishBot(f"Stockfish-{i}", i, "engines/stockfish-windows-x86-64-avx2.exe") for i in range(1, 6)]
