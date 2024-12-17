@@ -8,9 +8,9 @@ import sys
 import os
 import pandas as pd
 
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from engines.stockfish_bot import StockfishBot
-from engines.komodo_bot import KomodoBot
+sys.path.append(os.path.join(os.path.dirname(__file__), "../src"))
+from bots.stockfish_bot import StockfishBot
+from bots.komodo_bot import KomodoBot
 
 def evaluate_elo(results, bots):
     # https://stanislav-stankovic.medium.com/elo-rating-system-6196cc59941e

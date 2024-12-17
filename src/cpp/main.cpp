@@ -73,13 +73,13 @@ int get_statistics(int no_games)
             Move move;
             if (n % 2 == 1) {
                 auto start = std::chrono::high_resolution_clock::now();
-                move = negamax_agent_white.negamax(board, larry_kaufman_piece_sum, Color::WHITE, 4);
+                move = negamax_agent_white.negamax(board, larry_kaufman_piece_sum, Color::WHITE, 3);
                 auto stop = std::chrono::high_resolution_clock::now();
                 result["White Time"] += std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count()  >> 10;
                 // move = random_move(board);
             } else {
                 auto start = std::chrono::high_resolution_clock::now();
-                move = negamax_agent_black.negamax(board, larry_kaufman_piece_sum, Color::BLACK, 4);
+                move = negamax_agent_black.negamax(board, larry_kaufman_piece_sum, Color::BLACK, 3);
                 auto stop = std::chrono::high_resolution_clock::now();
                 result["Black Time"] += std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count()  >> 10;
             }

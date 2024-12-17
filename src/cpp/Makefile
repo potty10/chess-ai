@@ -8,11 +8,15 @@ CXX=g++
 CXXFLAGS := $(CXXFLAGS) -g -Wall -Wextra -pedantic -Werror -std=c++23
 
 SRCS = main.cpp negamax.cpp
+AGENT_SRCS = agent.cpp negamax.cpp
 BUILDDIR = build
 
-all: main
+all: main agent
 
 main: $(SRCS:%.cpp=$(BUILDDIR)/%.o) 
+	$(CXX) $(CXXFLAGS) $^ -o $@ 
+
+agent: $(AGENT_SRCS:%.cpp=$(BUILDDIR)/%.o) 
 	$(CXX) $(CXXFLAGS) $^ -o $@ 
 
 $(BUILDDIR)/%.o : %.cpp | $(BUILDDIR)
@@ -25,3 +29,4 @@ $(BUILDDIR): ; @mkdir -p $@
 clean:
 	rm -rf $(BUILDDIR)
 	rm main
+	rm agent
