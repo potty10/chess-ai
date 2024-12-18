@@ -11,6 +11,7 @@ import pandas as pd
 sys.path.append(os.path.join(os.path.dirname(__file__), "../src"))
 from bots.stockfish_bot import StockfishBot
 from bots.komodo_bot import KomodoBot
+from bots.minimax_bot import MinimaxBot
 
 def evaluate_elo(results, bots):
     # https://stanislav-stankovic.medium.com/elo-rating-system-6196cc59941e
@@ -90,7 +91,11 @@ def generate_stockfish_sample_matches(bots, no_games, filename, score_filename, 
 
 
 if __name__ == "__main__":
-
+    # Windows
     bots = [StockfishBot(f"Stockfish-{i}", i, "engines/stockfish-windows-x86-64-avx2.exe") for i in range(1, 6)]
+
+    # Linux
+    bots = [StockfishBot(f"Stockfish-{i}", i, "engines/stockfish-windows-x86-64-avx2.exe") for i in range(1, 6)]
+    bots += [MinimaxBot("Mybot", "src/cpp/agent")]
 
     generate_stockfish_sample_matches(bots, 2, "output/history.pgn", "output/results.csv", "output/elo.csv")

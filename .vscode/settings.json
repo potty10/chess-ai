@@ -72,6 +72,10 @@
         "xlocmon": "cpp",
         "xloctime": "cpp",
         "complex": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "condition_variable": "cpp",
+        "deque": "cpp",
+        "set": "cpp",
+        "variant": "cpp"
     }
 }
