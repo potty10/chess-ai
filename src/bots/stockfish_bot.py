@@ -5,12 +5,12 @@ class StockfishBot:
 
     empty_fen = chess.Board().fen()
 
-    def __init__(self, name, depth, executable_path = "../engines/stockfish-windows-x86-64-avx2.exe"):
+    def __init__(self, name, depth, executable_path = "../engines/stockfish-windows-x86-64-avx2.exe", parameters = None):
         '''
         depth - int: Ranges from 1 to 20
         '''
         self.name = name
-        self.stockfish_bot = Stockfish(path=executable_path, depth=depth)
+        self.stockfish_bot = Stockfish(path=executable_path, depth=depth, parameters=parameters)
     
     def reset(self):
         self.stockfish_bot.set_fen_position(self.empty_fen)
