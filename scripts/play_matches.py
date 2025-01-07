@@ -19,6 +19,7 @@ from bots.minimax_bot_cpp import MinimaxBot
 from bots.negamax_bot import NegaMaxAgent
 from bots.minimax_bot import MiniMaxAgent
 from bots.mcts_bot import MCTSAgent
+from bots.mcts_bot import MCTSAgent as DMCTSAgent
 
 def tally_score(results, bots):
     results = zip(results["white"], results["black"], results["score"])
@@ -94,8 +95,8 @@ if __name__ == "__main__":
 
     # bots += [MinimaxBot("Mybot", "src/cpp/agent")]
     # bots += [NegaMaxAgent("NegaMax")]
-    # bots += [MiniMaxAgent("MiniMax", ab_pruning=False)]
-    bots += [StockfishBot(f"Stockfish", 5, "engines/stockfish-windows-x86-64-avx2.exe")]
+    bots += [DMCTSAgent("Discount")]
+    # bots += [StockfishBot(f"Stockfish", 5, "engines/stockfish-windows-x86-64-avx2.exe")]
     bots += [MCTSAgent("MCTS")]
 
     intermediate_path = os.path.join("output", f"play_matches-{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}")
