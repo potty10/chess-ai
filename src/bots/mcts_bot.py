@@ -7,7 +7,7 @@ import random
 import time 
 from math import sqrt, log
 from collections import defaultdict
-
+from pprint import pprint
 import chess.polyglot
 from chess.polyglot import zobrist_hash
 
@@ -70,7 +70,7 @@ class Node():
         else:
             best_actions = []
             actions = [a[0] for a in self.children]
-            q_values = [self.qtable(hash(self.state, a)) for a in actions]
+            q_values = [self.qtable[hash(self.state, a)] for a in actions]
             max_q_value_of_actions = max(q_values)
             for i in range(len(q_values)):
                 if q_values[i] == max_q_value_of_actions:
@@ -88,10 +88,17 @@ class Node():
             
             # Randomly select an unexpanded action to expand
             actions = all_actions - visited_actions
-            action = random.choice(list(actions))
+            try:
+                action = random.choice(list(actions))
+            except Exception as e:
+                pprint(self.state.turn)
+                pprint(self.is_fully_expanded())
+                print(self.state)
+                pprint(self.children)
+                pprint(list(self.state.legal_moves))
+                raise e
             
-            child = self.get_outcome_child(action)
-            self.children.append((action, child))
+            child = self.create_new_child(action)
             return child
         return self
 
@@ -113,9 +120,20 @@ class Node():
 
     """ Simulate the outcome of an action, and return the child node """
 
+    def create_new_child(self, action):
+        board = self.state.copy()
+        board.push(action)
+
+        # This outcome has not occured from this state-action pair previously
+        new_child = Node(
+            self, board, self.qtable, 0, action
+        )
+        self.children.append((action, new_child))
+        return new_child
+    
     def get_outcome_child(self, action):
         # Find the corresponding child node and return if this already exists
-        for next_action, child_node in self.children[action]:
+        for next_action, child_node in self.children:
             if next_action == action:
                 return child_node
             
@@ -138,17 +156,11 @@ class Node():
         There may be different ways on how to choose such action, in this implementation the strategy is as follows:
         - pick at random one of the node which has the maximum visit count, as this means that it will have a good value anyway.
         '''
-
-        if self.done:
-            raise ValueError("game has ended")
-
-        if not self.child:
-            raise ValueError('no children found and game hasn\'t ended')
         
         # Choose the best action amongst the explored children? Or should non-explored children be given a chance? To encourage exploration
         best_actions = []
         actions = [a[0] for a in self.children]
-        q_values = [self.qtable(hash(self.state, a)) for a in actions]
+        q_values = [self.qtable[hash(self.state, a)] for a in actions]
         max_q_value_of_actions = max(q_values)
         for i in range(len(q_values)):
             if q_values[i] == max_q_value_of_actions:
@@ -166,8 +178,8 @@ class MCTSAgent:
 
     """The main Monte Carlo Tree Search algorithm"""
 
-    def mcts(self, board, timeout=20):
-        root_node = Node(None, board)
+    def mcts(self, board, timeout=8):
+        root_node = Node(None, board, self.qtable)
         current_color = board.turn
         start_time = time.time()
         current_time = time.time()
@@ -175,7 +187,7 @@ class MCTSAgent:
 
             # Find a state node to expand
             selected_node = root_node.select() # Possible for selected node to be terminal
-            if not selected_node.is_terminal():
+            if not selected_node.state.outcome():
 
                 child = selected_node.expand()
                 reward = self.simulate(child, current_color)
@@ -184,6 +196,10 @@ class MCTSAgent:
             current_time = time.time()
 
         return root_node.choose_best_action()
+    
+    def make_move(self, board):
+
+        return self.mcts(board)
 
     """ Simulate until a terminal state """
 

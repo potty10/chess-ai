@@ -18,6 +18,7 @@ from bots.komodo_bot import KomodoBot
 from bots.minimax_bot_cpp import MinimaxBot
 from bots.negamax_bot import NegaMaxAgent
 from bots.minimax_bot import MiniMaxAgent
+from bots.mcts_bot import MCTSAgent
 
 def tally_score(results, bots):
     results = zip(results["white"], results["black"], results["score"])
@@ -92,8 +93,10 @@ if __name__ == "__main__":
     #     bots.append(StockfishBot(f"Stockfish-{i*100}", 10, "engines/stockfish-ubuntu-x86-64-avx2",{"UCI_Elo": i*100}))
 
     # bots += [MinimaxBot("Mybot", "src/cpp/agent")]
-    bots += [NegaMaxAgent("NegaMax")]
-    bots += [MiniMaxAgent("MiniMax", ab_pruning=False)]
+    # bots += [NegaMaxAgent("NegaMax")]
+    # bots += [MiniMaxAgent("MiniMax", ab_pruning=False)]
+    bots += [StockfishBot(f"Stockfish", 5, "engines/stockfish-windows-x86-64-avx2.exe")]
+    bots += [MCTSAgent("MCTS")]
 
     intermediate_path = os.path.join("output", f"play_matches-{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}")
     os.makedirs(intermediate_path, exist_ok=True)
