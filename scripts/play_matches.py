@@ -18,8 +18,11 @@ from bots.komodo_bot import KomodoBot
 from bots.minimax_bot_cpp import MinimaxBot
 from bots.negamax_bot import NegaMaxAgent
 from bots.minimax_bot import MiniMaxAgent
-from bots.mcts_bot import MCTSAgent
-from bots.mcts_bot import MCTSAgent as DMCTSAgent
+# from bots.mcts_bot import MCTSAgent
+# from bots.mcts_bot import MCTSAgent as DMCTSAgent
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+from kaggle.mcts_bot import Agent
 
 def tally_score(results, bots):
     results = zip(results["white"], results["black"], results["score"])
@@ -52,9 +55,11 @@ def generate_sample_matches(bots, no_games, filename, score_filename, elo_filena
                 if n%2 == 0: #White player
                     move = bot_white.make_move(board)
                     board.push(move)
+                    print(move)
                 else:
                     move = bot_black.make_move(board)
                     board.push(move)
+                    print(move)
                 n += 1
                 if board.outcome():
                     break
@@ -81,7 +86,6 @@ def generate_sample_matches(bots, no_games, filename, score_filename, elo_filena
     bot_scores = tally_score(result_csv, bots)
     bot_scores = pd.DataFrame(bot_scores.items(), columns=['name', 'scores'])
     bot_scores.to_csv(elo_filename, index=False)
-    print(bot_scores)
 
 
 if __name__ == "__main__":
@@ -95,15 +99,15 @@ if __name__ == "__main__":
 
     # bots += [MinimaxBot("Mybot", "src/cpp/agent")]
     # bots += [NegaMaxAgent("NegaMax")]
-    bots += [DMCTSAgent("Discount")]
-    # bots += [StockfishBot(f"Stockfish", 5, "engines/stockfish-windows-x86-64-avx2.exe")]
-    bots += [MCTSAgent("MCTS")]
+    # bots += [DMCTSAgent("Discount")]
+    bots += [StockfishBot(f"Stockfish", 5, "engines/stockfish-windows-x86-64-avx2.exe")]
+    bots += [Agent("MCTS")]
 
     intermediate_path = os.path.join("output", f"play_matches-{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}")
     os.makedirs(intermediate_path, exist_ok=True)
     
     generate_sample_matches(bots, 
-                            2, 
+                            10, 
                             os.path.join(intermediate_path, "history.pgn"),
                             os.path.join(intermediate_path, "results.csv"),
                             os.path.join(intermediate_path, "scores.csv")
