@@ -22,7 +22,7 @@ from bots.minimax_bot import MiniMaxAgent
 # from bots.mcts_bot import MCTSAgent as DMCTSAgent
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from kaggle.mcts_bot import Agent
+from kaggle.mcts_bot_adversarial import Agent
 
 def tally_score(results, bots):
     results = zip(results["white"], results["black"], results["score"])
@@ -100,14 +100,16 @@ if __name__ == "__main__":
     # bots += [MinimaxBot("Mybot", "src/cpp/agent")]
     # bots += [NegaMaxAgent("NegaMax")]
     # bots += [DMCTSAgent("Discount")]
-    bots += [StockfishBot(f"Stockfish", 5, "engines/stockfish-windows-x86-64-avx2.exe")]
+    # bots += [StockfishBot(f"Stockfish", 5, "engines/stockfish-windows-x86-64-avx2.exe")]
+    bots += [Agent("MCTS-UCB", selection_metric="ucb")]
     bots += [Agent("MCTS")]
+    # bots += [Agent("MCTS-UCB", selection_metric="ucb")]
 
     intermediate_path = os.path.join("output", f"play_matches-{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}")
     os.makedirs(intermediate_path, exist_ok=True)
     
     generate_sample_matches(bots, 
-                            10, 
+                            1, 
                             os.path.join(intermediate_path, "history.pgn"),
                             os.path.join(intermediate_path, "results.csv"),
                             os.path.join(intermediate_path, "scores.csv")

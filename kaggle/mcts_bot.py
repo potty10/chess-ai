@@ -105,7 +105,7 @@ class Agent:
     def __init__(self, name):
         self.name = name
 
-    def mcts(self, board, timeout=2):
+    def mcts(self, board, timeout=5):
         root_node = Node(board)
         end_time = timeout + time.time()
         while time.time() < end_time:
@@ -120,7 +120,7 @@ class Agent:
     #         _, node = node.choose_best_explored_child()
     #     return node
 
-    def make_move(self, board, timeout=2):
+    def make_move(self, board, timeout=5):
         return self.mcts(board, timeout)
 
         
